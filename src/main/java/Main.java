@@ -12,7 +12,7 @@ public class Main {
 		GameRunner gameRunner = new GameRunner();
 		int simulations = 1000;
 
-		int success = gameRunner.runSimulations(new RandomCardStrategy(), simulations);
+		int success = gameRunner.runSimulations(new SimulationStrategy(), simulations);
 		logCompletionRate(success, simulations);
 
 	}
