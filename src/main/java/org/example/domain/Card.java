@@ -17,7 +17,6 @@ public class Card {
 		HEARTS,
 		CLUBS,
 		DIAMONDS
-
 	}
 
 	void printCard() {

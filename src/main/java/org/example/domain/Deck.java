@@ -12,22 +12,21 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter
 public class Deck {
 
-	public List<Card> cards = new LinkedList<Card>();
+	public List<Card> cards = new LinkedList<>();
 
 	public Deck() {
 		addSuit(Card.Suit.HEARTS);
 		addSuit(Card.Suit.DIAMONDS);
 		addSuit(Card.Suit.SPADES);
 		addSuit(Card.Suit.CLUBS);
-		shuffleDeck();
 
+		shuffleDeck();
 	}
 
 	void addSuit(Card.Suit suit) {
 		for (int i = 2; i <= 14; i++) {
 			cards.add(new Card(i, suit));
 		}
-
 	}
 
 	private void shuffleDeck() {
@@ -39,26 +38,26 @@ public class Deck {
 	}
 
 	public Deck cloneDeck() {
-
 		Deck copy = new Deck();
-		List<Card> temp = new LinkedList<Card>();
 
+		List<Card> temp = new LinkedList<Card>();
 		for (Card c : cards) {
 			temp.add(new Card(c.value, c.suit));
 		}
+
 		copy.cards = temp;
 		return copy;
 
 	}
 
 	public void printDeck() {
-
 		System.out.println("Deck starts:");
+
 		for (Card i : cards) {
 			System.out.println(i.value + " of " + i.suit);
 		}
-		System.out.println("Deck ends");
 
+		System.out.println("Deck ends");
 	}
 
 }
