@@ -1,6 +1,6 @@
 package org.example.strategy;
 
-import org.example.GameLogic;
+import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
@@ -20,21 +20,21 @@ public class SimulationStrategy implements CardMoveStrategy {
 
         int simulationsPerDecision = 1000;
 
-        if (!gamestate.emptyPiles.isEmpty() && ! gamestate.movablePiles.isEmpty()) {
+        if (!gamestate.getEmptyPiles().isEmpty() && ! gamestate.getMovablePiles().isEmpty()) {
             changed = true;
             GameState candidate =  gamestate;
             int success = 0;
 
-            for (int i = 0; i <  gamestate.movablePiles.size(); i++) {
+            for (int i = 0; i <  gamestate.getMovablePiles().size(); i++) {
                 GameState temporary =  gamestate.cloneGamestate();
 
                 temporary.checkEmptyAndMovable();
-                temporary.emptyPiles.get(0).add(temporary.movablePiles.get(i).getLast());
-                temporary.movablePiles.get(i).removeLast();
+                temporary.getEmptyPiles().get(0).add(temporary.getMovablePiles().get(i).getLast());
+                temporary.getMovablePiles().get(i).removeLast();
 
                 int successTemp = 0;
 
-                if (gamestate.movablePiles.size() > 1) {
+                if (gamestate.getMovablePiles().size() > 1) {
                     successTemp = simulateFinish(temporary, deck, simulationsPerDecision);
                 }
 
@@ -44,7 +44,7 @@ public class SimulationStrategy implements CardMoveStrategy {
                 }
             }
 
-            gamestate.piles = candidate.piles;
+            gamestate.setPiles(candidate.getPiles());
         }
 
         return changed;
@@ -59,13 +59,13 @@ public class SimulationStrategy implements CardMoveStrategy {
             Deck tempDeck = deck.cloneDeck();
             SimpleMoveStrategy strategy = new SimpleMoveStrategy();
 
-            while (!tempDeck.cards.isEmpty()) {
+            while (!tempDeck.getCards().isEmpty()) {
                 processRemovalsAndMoves(temp, tempDeck, strategy);
-                temp.dealCards(tempDeck);
+                gameLogic.dealCards(temp, tempDeck);
                 processRemovalsAndMoves(temp, tempDeck, strategy);
             }
 
-            if(temp.checkIfWin()) success++;
+            if(gameLogic.checkIfWin(temp)) success++;
         }
 
         return success;
@@ -77,7 +77,7 @@ public class SimulationStrategy implements CardMoveStrategy {
         while (changed) {
             changed = false;
 
-            if (gamestate.removeCards()) changed = true;
+            if (gameLogic.removeCards(gamestate)) changed = true;
             if (strategy.moveCard(gamestate, deck)) changed = true;
         }
     }

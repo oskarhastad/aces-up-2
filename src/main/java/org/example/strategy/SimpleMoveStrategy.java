@@ -1,9 +1,17 @@
 package org.example.strategy;
 
+import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
 public class SimpleMoveStrategy implements CardMoveStrategy{
+
+    private final GameLogic gameLogic;
+
+    public SimpleMoveStrategy() {
+        this.gameLogic = new GameLogic();
+    }
+
 
     @Override
     public boolean moveCard(GameState gamestate, Deck deck) {
@@ -11,24 +19,24 @@ public class SimpleMoveStrategy implements CardMoveStrategy{
         gamestate.checkEmptyAndMovable();
         boolean changed = false;
 
-        if (!gamestate.emptyPiles.isEmpty() && !gamestate.movablePiles.isEmpty()) {
+        if (!gamestate.getEmptyPiles().isEmpty() && !gamestate.getMovablePiles().isEmpty()) {
             changed = true;
             GameState candidate = gamestate;
 
-            for (int i = 0; i < gamestate.movablePiles.size(); i++) {
+            for (int i = 0; i < gamestate.getMovablePiles().size(); i++) {
                 GameState temporary = gamestate.cloneGamestate();
 
                 temporary.checkEmptyAndMovable();
-                temporary.emptyPiles.get(0).add(temporary.movablePiles.get(i).getLast());
-                temporary.movablePiles.get(i).removeLast();
-                temporary.removeCards();
+                temporary.getEmptyPiles().get(0).add(temporary.getMovablePiles().get(i).getLast());
+                temporary.getMovablePiles().get(i).removeLast();
+                gameLogic.removeCards(temporary);
 
                 if (temporary.amountOfCards() <= candidate.amountOfCards()) {
                     candidate = temporary;
                 }
             }
 
-            gamestate.piles = candidate.piles;
+            gamestate.setPiles(candidate.getPiles());
         }
 
         return changed;

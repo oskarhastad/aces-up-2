@@ -1,10 +1,12 @@
-package org.example;
+package org.example.logic;
 
 import org.example.domain.Card;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GameLogic {
 

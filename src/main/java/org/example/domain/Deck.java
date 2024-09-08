@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter
 public class Deck {
 
-	public List<Card> cards = new LinkedList<>();
+	private List<Card> cards = new LinkedList<>();
 
 	public Deck() {
 		addSuit(Card.Suit.HEARTS);
