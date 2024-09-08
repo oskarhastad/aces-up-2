@@ -19,8 +19,6 @@ public class Deck {
 		addSuit(Card.Suit.DIAMONDS);
 		addSuit(Card.Suit.SPADES);
 		addSuit(Card.Suit.CLUBS);
-
-		shuffleDeck();
 	}
 
 	void addSuit(Card.Suit suit) {
@@ -29,7 +27,7 @@ public class Deck {
 		}
 	}
 
-	private void shuffleDeck() {
+	public void shuffleDeck() {
 		Collections.shuffle(cards);
 	}
 

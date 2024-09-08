@@ -1,8 +1,13 @@
 package org.example.domain;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@Setter
+@Getter
 public class GameState {
 
 	public List<LinkedList<Card>> piles = new ArrayList<>(4);

@@ -15,6 +15,11 @@ import java.util.concurrent.Future;
 @Slf4j
 public class GameRunner {
 
+    private final GameLogic gameLogic;
+
+    public GameRunner() {
+        this.gameLogic = new GameLogic();
+    }
     public int runSimulations(CardMoveStrategy cardMoveStrategy, int simulations) {
 
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -22,6 +27,7 @@ public class GameRunner {
 
         for (int i = 0; i < simulations; i++) {
             Deck deck = new Deck();
+            deck.shuffleDeck();
             GameState gameState = new GameState(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
             results.add(executor.submit(() -> runSingleGame(cardMoveStrategy, gameState, deck)));
         }
@@ -60,16 +66,17 @@ public class GameRunner {
     private boolean runSingleGame(CardMoveStrategy cardMoveStrategy, GameState gameState, Deck deck) {
 
         while (!deck.cards.isEmpty()) {
+            gameLogic.dealCards(gameState, deck);
             gameState.dealCards(deck);
 
             boolean changed = true;
             while(changed) {
-                changed = gameState.removeCards();
+                changed = gameLogic.removeCards(gameState);
 
                 if(cardMoveStrategy.moveCard(gameState, deck)) changed = true;
             }
         }
 
-        return gameState.checkIfWin();
+        return gameLogic.checkIfWin(gameState);
     }
 }

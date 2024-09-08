@@ -1,9 +1,16 @@
 package org.example.strategy;
 
+import org.example.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
 public class SimulationStrategy implements CardMoveStrategy {
+
+    private final GameLogic gameLogic;
+
+    public SimulationStrategy() {
+        this.gameLogic = new GameLogic();
+    }
 
     @Override
     public boolean moveCard(GameState gamestate, Deck deck) {
