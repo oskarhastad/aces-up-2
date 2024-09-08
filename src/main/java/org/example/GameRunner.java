@@ -21,7 +21,6 @@ public class GameRunner {
         List<Future<Boolean>> results = new ArrayList<>();
 
         for (int i = 0; i < simulations; i++) {
-
             Deck deck = new Deck();
             GameState gameState = new GameState(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
             results.add(executor.submit(() -> runSingleGame(cardMoveStrategy, gameState, deck)));

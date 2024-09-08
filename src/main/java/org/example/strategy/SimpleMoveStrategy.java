@@ -13,7 +13,7 @@ public class SimpleMoveStrategy implements CardMoveStrategy{
 
         if (!gamestate.emptyPiles.isEmpty() && !gamestate.movablePiles.isEmpty()) {
             changed = true;
-            GameState candidate = gamestate.cloneGamestate();
+            GameState candidate = gamestate;
 
             for (int i = 0; i < gamestate.movablePiles.size(); i++) {
                 GameState temporary = gamestate.cloneGamestate();

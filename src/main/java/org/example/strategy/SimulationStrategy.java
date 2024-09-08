@@ -15,7 +15,7 @@ public class SimulationStrategy implements CardMoveStrategy {
 
         if (!gamestate.emptyPiles.isEmpty() && ! gamestate.movablePiles.isEmpty()) {
             changed = true;
-            GameState candidate =  gamestate.cloneGamestate();
+            GameState candidate =  gamestate;
             int success = 0;
 
             for (int i = 0; i <  gamestate.movablePiles.size(); i++) {
@@ -24,7 +24,6 @@ public class SimulationStrategy implements CardMoveStrategy {
                 temporary.checkEmptyAndMovable();
                 temporary.emptyPiles.get(0).add(temporary.movablePiles.get(i).getLast());
                 temporary.movablePiles.get(i).removeLast();
-                temporary.removeCards();
 
                 int successTemp = 0;
 

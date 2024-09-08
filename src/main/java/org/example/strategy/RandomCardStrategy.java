@@ -15,24 +15,13 @@ public class RandomCardStrategy implements CardMoveStrategy{
         boolean changed = false;
         gamestate.checkEmptyAndMovable();
 
-        List<LinkedList<Card>> empty = gamestate.emptyPiles;
-        List<LinkedList<Card>> canMove = gamestate.movablePiles;
-
-        if (!gamestate.emptyPiles.isEmpty() && !canMove.isEmpty()) {
+        if (!gamestate.emptyPiles.isEmpty() && !gamestate.movablePiles.isEmpty()) {
             changed = true;
 
-            for (LinkedList<Card> pile : empty) {
-                if (!canMove.isEmpty()) {
-                    int randomNum = ThreadLocalRandom.current().nextInt(0, canMove.size());
+            int randomNum = ThreadLocalRandom.current().nextInt(0, gamestate.movablePiles.size());
+            gamestate.emptyPiles.get(0).add(gamestate.movablePiles.get(randomNum).getLast());
+            gamestate.movablePiles.get(randomNum).removeLast();
 
-                    pile.add(canMove.get(randomNum).getLast());
-                    canMove.get(randomNum).removeLast();
-
-                    if (canMove.get(randomNum).size() < 2) {
-                        canMove.remove(randomNum);
-                    }
-                }
-            }
         }
 
         return changed;
