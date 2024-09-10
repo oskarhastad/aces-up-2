@@ -4,58 +4,57 @@ import org.example.domain.Card;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 public class GameLogic {
 
     public void dealCards(GameState gameState, Deck deck) {
-        for (LinkedList<Card> pile : gameState.getPiles()) {
-            pile.add(deck.drawCard());
+        for (LinkedList<Card> pile : gameState.getCardPiles()) {
+            if(!deck.getCards().isEmpty()) pile.add(deck.drawCard());
         }
     }
 
     public boolean removeCards(GameState gameState) {
-        boolean wasChanged = false;
-        boolean changed = true;
 
-        while (changed) {
-            changed = false;
-            for (int i = 0; i < gameState.getPiles().size(); i++) {
-                for (int j = i + 1; j < gameState.getPiles().size(); j++) {
-                    if (!gameState.getPiles().get(i).isEmpty() && !gameState.getPiles().get(j).isEmpty()) {
-                        if (compareRemoveCards(gameState.getPiles().get(i), gameState.getPiles().get(j))) {
-                            changed = true;
-                            wasChanged = true;
+        boolean anyCardsRemoved = false;
+        boolean cardsRemovedThisIteration = true;
+
+        while (cardsRemovedThisIteration) {
+            cardsRemovedThisIteration = false;
+            for (int i = 0; i < gameState.getCardPiles().size(); i++) {
+                for (int j = i + 1; j < gameState.getCardPiles().size(); j++) {
+                    if (!gameState.getCardPiles().get(i).isEmpty() && !gameState.getCardPiles().get(j).isEmpty()) {
+                        if (removeLowerCardSameSuit(gameState.getCardPiles().get(i), gameState.getCardPiles().get(j))) {
+                            cardsRemovedThisIteration = true;
+                            anyCardsRemoved = true;
                         }
                     }
                 }
             }
         }
-        return wasChanged;
+        return anyCardsRemoved;
     }
 
-    private boolean compareRemoveCards(LinkedList<Card> firstPile, LinkedList<Card> secondPile) {
-        Card lastPileOne = firstPile.getLast();
-        Card lastPileTwo = secondPile.getLast();
+    private boolean removeLowerCardSameSuit(LinkedList<Card> firstPile, LinkedList<Card> secondPile) {
+        Card lastCardPileOne = firstPile.getLast();
+        Card lastCardPileTwo = secondPile.getLast();
 
-        if (lastPileOne.getSuit() == lastPileTwo.getSuit()) {
-            if (lastPileOne.getValue() > lastPileTwo.getValue()) {
+        if (lastCardPileOne.getSuit() == lastCardPileTwo.getSuit()) {
+            if (lastCardPileOne.getValue() > lastCardPileTwo.getValue()) {
                 secondPile.removeLast();
-                return true;
             }
-            firstPile.removeLast();
+            else {
+                firstPile.removeLast();
+            }
             return true;
         }
         return false;
     }
 
     public boolean checkIfWin(GameState gameState) {
-        for (LinkedList<Card> pile : gameState.getPiles()) {
-            if (pile.size() != 1) return false;
-        }
-        return true;
+        return gameState.getCardPiles().stream()
+                .allMatch(pile -> pile.size() == 1 && pile.getFirst().getValue() == 14);
     }
+
 }
 

@@ -24,7 +24,7 @@ public class SimpleMoveStrategy implements CardMoveStrategy{
             GameState candidate = gamestate;
 
             for (int i = 0; i < gamestate.getMovablePiles().size(); i++) {
-                GameState temporary = gamestate.cloneGamestate();
+                GameState temporary = gamestate.cloneGameState();
 
                 temporary.checkEmptyAndMovable();
                 temporary.getEmptyPiles().get(0).add(temporary.getMovablePiles().get(i).getLast());
@@ -36,7 +36,7 @@ public class SimpleMoveStrategy implements CardMoveStrategy{
                 }
             }
 
-            gamestate.setPiles(candidate.getPiles());
+            gamestate.setCardPiles(candidate.getCardPiles());
         }
 
         return changed;

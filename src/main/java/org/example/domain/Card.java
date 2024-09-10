@@ -5,12 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @AllArgsConstructor
-@Setter
 @Getter
 public class Card {
 
-	int value;
-	Suit suit;
+	private final int value;
+	private final Suit suit;
 
 	public enum Suit {
 		SPADES,
@@ -19,7 +18,7 @@ public class Card {
 		DIAMONDS
 	}
 
-	void printCard() {
+	public void printCard() {
 		System.out.println(value + " of " + suit.toString());
 	}
 }

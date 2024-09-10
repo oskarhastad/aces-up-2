@@ -9,7 +9,7 @@ GameStateTest {
     @Test
     void testInitialState() {
         GameState gameState = new GameState(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
-        assertEquals(4, gameState.getPiles().size());
+        assertEquals(4, gameState.getCardPiles().size());
     }
 
     @Test
@@ -17,8 +17,8 @@ GameStateTest {
         LinkedList<Card> pileOne = new LinkedList<>();
         pileOne.add(new Card(3, Card.Suit.SPADES));
         GameState gameState = new GameState(pileOne, new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
-        GameState clonedState = gameState.cloneGamestate();
-        assertEquals(gameState.getPiles().get(0).get(0).getValue(), clonedState.getPiles().get(0).get(0).getValue());
+        GameState clonedState = gameState.cloneGameState();
+        assertEquals(gameState.getCardPiles().get(0).get(0).getValue(), clonedState.getCardPiles().get(0).get(0).getValue());
     }
 
     @Test

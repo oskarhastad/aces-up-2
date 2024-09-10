@@ -5,62 +5,55 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
 public class GameState {
 
-	private List<LinkedList<Card>> piles = new ArrayList<>(4);
-	private List<LinkedList<Card>> emptyPiles = new LinkedList<>();
-	private List<LinkedList<Card>> movablePiles = new LinkedList<>();
+	private List<LinkedList<Card>> cardPiles = new ArrayList<>(4);
+	private List<LinkedList<Card>> emptyPiles = new ArrayList<>();
+	private List<LinkedList<Card>> movablePiles = new ArrayList<>();
 
-	public GameState(){
-		piles.add(new LinkedList<>());
-		piles.add(new LinkedList<>());
-		piles.add(new LinkedList<>());
-		piles.add(new LinkedList<>());
+	public GameState() {
+		for (int i = 0; i < 4; i++) {
+			cardPiles.add(new LinkedList<>());
+		}
 
 	}
-	public GameState(LinkedList<Card> pileOne, LinkedList<Card> pileTwo, LinkedList<Card> pileThree,
-					 LinkedList<Card> pileFour) {
-		piles.add(pileOne);
-		piles.add(pileTwo);
-		piles.add(pileThree);
-		piles.add(pileFour);
+
+	public GameState(List<LinkedList<Card>> cardPiles) {
+		this.cardPiles = cardPiles;
+
 	}
 
 	public void checkEmptyAndMovable() {
-		emptyPiles.clear();
-		movablePiles.clear();
+		emptyPiles = cardPiles.stream()
+				.filter(List::isEmpty)
+				.collect(Collectors.toList());
 
-		for (LinkedList<Card> checkPile : getPiles()) {
-			if (checkPile.isEmpty()) {
-				getEmptyPiles().add(checkPile);
-			}
-			if (checkPile.size() >= 2) {
-				getMovablePiles().add(checkPile);
-			}
-		}
+		movablePiles = cardPiles.stream()
+				.filter(pile -> pile.size() >= 2)
+				.collect(Collectors.toList());
 	}
+
 
 	public int amountOfCards() {
-		return getPiles().stream().mapToInt(List::size).sum();
+		return getCardPiles().stream().mapToInt(List::size).sum();
 	}
 
 
-	public GameState cloneGamestate() {
-		List<LinkedList<Card>> copy = new ArrayList<>();
+	public GameState cloneGameState() {
+		List<LinkedList<Card>> copy = cardPiles.stream()
+				.map(this::clonePile)
+				.collect(Collectors.toList());
 
-		for (int i = 0; i < piles.size(); i++) {
-			LinkedList<Card> tempList = new LinkedList<>();
-			copy.add(tempList);
+		return new GameState(copy);
+	}
 
-			for (int j = 0; j < piles.get(i).size(); j++) {
-				Card tempcard = new Card(piles.get(i).get(j).value, piles.get(i).get(j).suit);
-				copy.get(i).add(tempcard);
-			}
-		}
-
-		return new GameState(copy.get(0), copy.get(1), copy.get(2), copy.get(3));
+	private LinkedList<Card> clonePile(LinkedList<Card> pile) {
+		return pile.stream()
+				.map(card -> new Card(card.getValue(), card.getSuit()))
+				.collect(Collectors.toCollection(LinkedList::new));
 	}
 }

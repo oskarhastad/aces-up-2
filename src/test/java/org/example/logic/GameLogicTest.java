@@ -16,7 +16,7 @@ class GameLogicTest {
         Deck deck = new Deck();
         GameState gameState = new GameState(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
         gameLogic.dealCards(gameState, deck);
-        for (LinkedList<Card> pile : gameState.getPiles()) {
+        for (LinkedList<Card> pile : gameState.getCardPiles()) {
             assertFalse(pile.isEmpty());
         }
     }
@@ -30,7 +30,7 @@ class GameLogicTest {
         GameState gameState = new GameState(pileOne, pileTwo, new LinkedList<>(), new LinkedList<>());
         boolean result = gameLogic.removeCards(gameState);
         assertTrue(result);
-        assertEquals(0, gameState.getPiles().get(0).size());
+        assertEquals(0, gameState.getCardPiles().get(0).size());
     }
 
     @Test

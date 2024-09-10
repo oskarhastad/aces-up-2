@@ -18,7 +18,7 @@ public class SimulationStrategy implements CardMoveStrategy {
         boolean changed = false;
         gamestate.checkEmptyAndMovable();
 
-        int simulationsPerDecision = 1000;
+        int simulationsPerDecision = 100;
 
         if (!gamestate.getEmptyPiles().isEmpty() && ! gamestate.getMovablePiles().isEmpty()) {
             changed = true;
@@ -26,7 +26,7 @@ public class SimulationStrategy implements CardMoveStrategy {
             int success = 0;
 
             for (int i = 0; i <  gamestate.getMovablePiles().size(); i++) {
-                GameState temporary =  gamestate.cloneGamestate();
+                GameState temporary =  gamestate.cloneGameState();
 
                 temporary.checkEmptyAndMovable();
                 temporary.getEmptyPiles().get(0).add(temporary.getMovablePiles().get(i).getLast());
@@ -44,7 +44,7 @@ public class SimulationStrategy implements CardMoveStrategy {
                 }
             }
 
-            gamestate.setPiles(candidate.getPiles());
+            gamestate.setCardPiles(candidate.getCardPiles());
         }
 
         return changed;
@@ -55,19 +55,20 @@ public class SimulationStrategy implements CardMoveStrategy {
         int success = 0;
 
         for (int i = 0; i < simulations; i++) {
-            GameState temp = gamestate.cloneGamestate();
+            GameState temp = gamestate.cloneGameState();
             Deck tempDeck = deck.cloneDeck();
-            SimpleMoveStrategy strategy = new SimpleMoveStrategy();
+            CardMoveStrategy strategy = new RandomCardStrategy();
 
             while (!tempDeck.getCards().isEmpty()) {
                 processRemovalsAndMoves(temp, tempDeck, strategy);
                 gameLogic.dealCards(temp, tempDeck);
-                processRemovalsAndMoves(temp, tempDeck, strategy);
             }
+            processRemovalsAndMoves(temp, tempDeck, strategy);
 
             if(gameLogic.checkIfWin(temp)) success++;
         }
 
+        System.out.println(success);
         return success;
     }
     private void processRemovalsAndMoves(GameState gamestate, Deck deck, CardMoveStrategy strategy) {

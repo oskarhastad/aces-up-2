@@ -3,25 +3,29 @@ package org.example.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-@Setter
 @Getter
 public class Deck {
 
-	private List<Card> cards = new LinkedList<>();
+	private List<Card> cards = new ArrayList<>();
 
 	public Deck() {
-		addSuit(Card.Suit.HEARTS);
-		addSuit(Card.Suit.DIAMONDS);
-		addSuit(Card.Suit.SPADES);
-		addSuit(Card.Suit.CLUBS);
+		addAllCards();
 	}
 
-	void addSuit(Card.Suit suit) {
+	private void addAllCards() {
+		for(Card.Suit suit: Card.Suit.values()) {
+			addSuit(suit);
+		}
+	}
+	private void addSuit(Card.Suit suit) {
 		for (int i = 2; i <= 14; i++) {
 			cards.add(new Card(i, suit));
 		}
@@ -32,30 +36,14 @@ public class Deck {
 	}
 
 	public Card drawCard() {
-		return cards.remove(0);
+		return cards.remove(cards.size()-1);
 	}
 
 	public Deck cloneDeck() {
 		Deck copy = new Deck();
-
-		List<Card> temp = new LinkedList<Card>();
-		for (Card c : cards) {
-			temp.add(new Card(c.value, c.suit));
-		}
-
-		copy.cards = temp;
+		copy.cards = cards.stream()
+				.map(card -> new Card(card.getValue(), card.getSuit()))
+				.collect(Collectors.toCollection(LinkedList::new));
 		return copy;
-
 	}
-
-	public void printDeck() {
-		System.out.println("Deck starts:");
-
-		for (Card i : cards) {
-			System.out.println(i.value + " of " + i.suit);
-		}
-
-		System.out.println("Deck ends");
-	}
-
 }
