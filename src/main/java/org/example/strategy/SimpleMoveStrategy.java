@@ -17,10 +17,10 @@ public class SimpleMoveStrategy implements CardMoveStrategy{
     public boolean moveCard(GameState gamestate, Deck deck) {
 
         gamestate.checkEmptyAndMovable();
-        boolean changed = false;
+        boolean movedCard = false;
 
         if (!gamestate.getEmptyPiles().isEmpty() && !gamestate.getMovablePiles().isEmpty()) {
-            changed = true;
+            movedCard = true;
             GameState candidate = gamestate;
 
             for (int i = 0; i < gamestate.getMovablePiles().size(); i++) {
@@ -39,6 +39,6 @@ public class SimpleMoveStrategy implements CardMoveStrategy{
             gamestate.setCardPiles(candidate.getCardPiles());
         }
 
-        return changed;
+        return movedCard;
     }
 }

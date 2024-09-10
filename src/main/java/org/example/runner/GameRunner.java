@@ -8,7 +8,6 @@ import org.example.strategy.CardMoveStrategy;
 import java.util.List;
 import java.util.concurrent.*;
 
-@Slf4j
 public class GameRunner {
 
     private final GameLogic gameLogic;
@@ -20,19 +19,22 @@ public class GameRunner {
     }
 
     public int runSimulations(CardMoveStrategy cardMoveStrategy, int simulations) {
-        Callable<Boolean> task = () -> {
-            Deck deck = new Deck();
-            deck.shuffleDeck();
-            GameState gameState = new GameState();
-            return runSingleGame(cardMoveStrategy, gameState, deck);
-        };
 
+        Callable<Boolean> task = createSimulationTask(cardMoveStrategy);
         List<Future<Boolean>> results = simulationExecutor.submitTasks(task, simulations);
 
         return simulationExecutor.collectResults(results);
     }
+    private Callable<Boolean> createSimulationTask(CardMoveStrategy cardMoveStrategy) {
+        return () -> {
+            Deck deck = new Deck();
+            deck.shuffleDeck();
+            GameState gameState = new GameState();
+            return simulateSingleGame(cardMoveStrategy, gameState, deck);
+        };
+    }
 
-    private boolean runSingleGame(CardMoveStrategy cardMoveStrategy, GameState gameState, Deck deck) {
+    private boolean simulateSingleGame(CardMoveStrategy cardMoveStrategy, GameState gameState, Deck deck) {
         while (!deck.getCards().isEmpty()) {
             gameLogic.dealCards(gameState, deck);
             boolean changed = true;

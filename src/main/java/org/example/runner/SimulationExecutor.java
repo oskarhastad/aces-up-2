@@ -24,13 +24,16 @@ public class SimulationExecutor {
 
     public int collectResults(List<Future<Boolean>> results) {
         int completed = 0;
+        int totalSimulations = results.size();
 
         try {
-            for (int i = 0; i < results.size(); i++) {
+            for (int i = 0; i < totalSimulations; i++) {
                 try {
                     if (results.get(i).get()) {
                         completed++;
-                        log.info("Simulation {} completed successfully.", (i + 1));
+                        double completedPercent = (double) completed / (i+1) * 100;
+                        log.info("Completed {} out of {} simulations. Won {} ouf of {}, thus a completion rate of {}%"
+                        , (i+1), totalSimulations, completed, (i+1),String.format("%.2f", completedPercent));
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

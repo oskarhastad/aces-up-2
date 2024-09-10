@@ -22,12 +22,7 @@ public class Deck {
 
 	private void addAllCards() {
 		for(Card.Suit suit: Card.Suit.values()) {
-			addSuit(suit);
-		}
-	}
-	private void addSuit(Card.Suit suit) {
-		for (int i = 2; i <= 14; i++) {
-			cards.add(new Card(i, suit));
+			IntStream.rangeClosed(2,14).forEach(value -> cards.add(new Card(value, suit)));
 		}
 	}
 

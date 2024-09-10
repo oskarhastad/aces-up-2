@@ -8,10 +8,8 @@ import org.example.strategy.SimulationStrategy;
 public class Main {
 
 	public static void main(String[] args) {
-
 		GameRunner gameRunner = new GameRunner();
-		int simulations = 100000;
-
+		int simulations = 1000;
 		int success = gameRunner.runSimulations(new SimpleMoveStrategy(), simulations);
 		logCompletionRate(success, simulations);
 

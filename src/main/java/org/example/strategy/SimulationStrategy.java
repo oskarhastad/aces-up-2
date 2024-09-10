@@ -18,7 +18,7 @@ public class SimulationStrategy implements CardMoveStrategy {
         boolean changed = false;
         gamestate.checkEmptyAndMovable();
 
-        int simulationsPerDecision = 100;
+        int simulationsPerDecision = 500;
 
         if (!gamestate.getEmptyPiles().isEmpty() && ! gamestate.getMovablePiles().isEmpty()) {
             changed = true;
@@ -57,7 +57,8 @@ public class SimulationStrategy implements CardMoveStrategy {
         for (int i = 0; i < simulations; i++) {
             GameState temp = gamestate.cloneGameState();
             Deck tempDeck = deck.cloneDeck();
-            CardMoveStrategy strategy = new RandomCardStrategy();
+            tempDeck.shuffleDeck();
+            CardMoveStrategy strategy = new SimpleMoveStrategy();
 
             while (!tempDeck.getCards().isEmpty()) {
                 processRemovalsAndMoves(temp, tempDeck, strategy);
@@ -68,7 +69,6 @@ public class SimulationStrategy implements CardMoveStrategy {
             if(gameLogic.checkIfWin(temp)) success++;
         }
 
-        System.out.println(success);
         return success;
     }
     private void processRemovalsAndMoves(GameState gamestate, Deck deck, CardMoveStrategy strategy) {
