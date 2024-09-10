@@ -12,7 +12,7 @@ class RandomCardStrategyTest {
     void testMoveCard() {
         RandomCardStrategy strategy = new RandomCardStrategy();
         Deck deck = new Deck();
-        GameState gameState = new GameState(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
+        GameState gameState = new GameState();
         boolean result = strategy.moveCard(gameState, deck);
         assertFalse(result);
     }
