@@ -1,13 +1,10 @@
 package org.example.domain;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,14 +28,17 @@ public class Deck {
 	}
 
 	public Card drawCard() {
-		return cards.remove(cards.size()-1);
+		if (cards.isEmpty()) {
+			throw new IllegalStateException("Cannot draw from an empty deck");
+		}
+		return cards.remove(cards.size() - 1);
 	}
 
 	public Deck cloneDeck() {
 		Deck copy = new Deck();
 		copy.cards = cards.stream()
-				.map(card -> new Card(card.getValue(), card.getSuit()))
-				.collect(Collectors.toCollection(LinkedList::new));
+				.map(card -> new Card(card.value(), card.suit()))
+				.collect(Collectors.toList());
 		return copy;
 	}
 }

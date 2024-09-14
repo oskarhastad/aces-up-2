@@ -51,7 +51,7 @@ class CardMoveStrategyTest {
     @Test
     void testSimpleMoveStrategy() {
         GameState gameState = createTestGameState();
-        SimpleMoveStrategy strategy = new SimpleMoveStrategy();
+        BasicMoveStrategy strategy = new BasicMoveStrategy();
         Deck deck = new Deck();
         assertStrategyWorks(strategy, gameState, deck);
     }

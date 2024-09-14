@@ -16,9 +16,11 @@ public class SimulationExecutor {
 
     public List<Future<Boolean>> submitTasks(Callable<Boolean> task, int simulations) {
         List<Future<Boolean>> results = new ArrayList<>();
+
         for (int i = 0; i < simulations; i++) {
             results.add(executor.submit(task));
         }
+
         return results;
     }
 
@@ -28,12 +30,13 @@ public class SimulationExecutor {
 
         try {
             for (int i = 0; i < totalSimulations; i++) {
+                Future<Boolean> future = results.get(i);
                 try {
-                    if (results.get(i).get()) {
+                    if (future.get()) {
                         completed++;
-                        double completedPercent = (double) completed / (i+1) * 100;
-                        log.info("Completed {} out of {} simulations. Won {} ouf of {}, thus a completion rate of {}%"
-                        , (i+1), totalSimulations, completed, (i+1),String.format("%.2f", completedPercent));
+                        double completedPercent = (double) completed / (i + 1) * 100;
+                        log.info("Completed {} out of {} simulations. Won {} out of {}, thus a completion rate of {}%",
+                                (i + 1), totalSimulations, completed, (i + 1), String.format("%.2f", completedPercent));
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

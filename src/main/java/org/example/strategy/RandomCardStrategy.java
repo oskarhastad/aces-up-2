@@ -14,22 +14,23 @@ public class RandomCardStrategy implements CardMoveStrategy{
         this.gameLogic = new GameLogic();
     }
 
-
     @Override
     public boolean moveCard(GameState gamestate, Deck deck) {
-        boolean changed = false;
-
         gamestate.checkEmptyAndMovable();
 
-        if (!gamestate.getEmptyPiles().isEmpty() && !gamestate.getMovablePiles().isEmpty()) {
-            changed = true;
-
-            int randomNum = ThreadLocalRandom.current().nextInt(0, gamestate.getMovablePiles().size());
-            gamestate.getEmptyPiles().get(0).add(gamestate.getMovablePiles().get(randomNum).getLast());
-            gamestate.getMovablePiles().get(randomNum).removeLast();
-
+        if (gamestate.getEmptyPiles().isEmpty() || gamestate.getMovablePiles().isEmpty()) {
+            return false;
         }
 
-        return changed;
+        int randomNum = ThreadLocalRandom.current().nextInt(0, gamestate.getMovablePiles().size());
+        gamestate.getEmptyPiles().get(0).add(gamestate.getMovablePiles().get(randomNum).getLast());
+        gamestate.getMovablePiles().get(randomNum).removeLast();
+
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Random Card Strategy";
     }
 }

@@ -10,17 +10,17 @@ public class GameLogic {
 
     public void dealCards(GameState gameState, Deck deck) {
         for (LinkedList<Card> pile : gameState.getCardPiles()) {
-            if(!deck.getCards().isEmpty()) pile.add(deck.drawCard());
+            if (!deck.getCards().isEmpty()) pile.add(deck.drawCard());
         }
     }
 
     public boolean removeCards(GameState gameState) {
-
         boolean anyCardsRemoved = false;
         boolean cardsRemovedThisIteration = true;
 
         while (cardsRemovedThisIteration) {
             cardsRemovedThisIteration = false;
+
             for (int i = 0; i < gameState.getCardPiles().size(); i++) {
                 for (int j = i + 1; j < gameState.getCardPiles().size(); j++) {
                     if (!gameState.getCardPiles().get(i).isEmpty() && !gameState.getCardPiles().get(j).isEmpty()) {
@@ -39,8 +39,8 @@ public class GameLogic {
         Card lastCardPileOne = firstPile.getLast();
         Card lastCardPileTwo = secondPile.getLast();
 
-        if (lastCardPileOne.getSuit() == lastCardPileTwo.getSuit()) {
-            if (lastCardPileOne.getValue() > lastCardPileTwo.getValue()) {
+        if (lastCardPileOne.suit() == lastCardPileTwo.suit()) {
+            if (lastCardPileOne.value() > lastCardPileTwo.value()) {
                 secondPile.removeLast();
             }
             else {
@@ -53,8 +53,7 @@ public class GameLogic {
 
     public boolean checkIfWin(GameState gameState) {
         return gameState.getCardPiles().stream()
-                .allMatch(pile -> pile.size() == 1 && pile.getFirst().getValue() == 14);
+                .allMatch(pile -> pile.size() == 1 && pile.getFirst().value() == 14);
     }
-
 }
 

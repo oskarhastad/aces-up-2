@@ -19,12 +19,12 @@ public class GameRunner {
     }
 
     public int runSimulations(CardMoveStrategy cardMoveStrategy, int simulations) {
-
         Callable<Boolean> task = createSimulationTask(cardMoveStrategy);
         List<Future<Boolean>> results = simulationExecutor.submitTasks(task, simulations);
 
         return simulationExecutor.collectResults(results);
     }
+
     private Callable<Boolean> createSimulationTask(CardMoveStrategy cardMoveStrategy) {
         return () -> {
             Deck deck = new Deck();
@@ -38,6 +38,7 @@ public class GameRunner {
         while (!deck.getCards().isEmpty()) {
             gameLogic.dealCards(gameState, deck);
             boolean changed = true;
+
             while (changed) {
                 changed = gameLogic.removeCards(gameState);
                 if (cardMoveStrategy.moveCard(gameState, deck)) changed = true;

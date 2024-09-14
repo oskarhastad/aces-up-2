@@ -1,9 +1,7 @@
 package org.example.domain;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +21,7 @@ GameStateTest {
         GameState gameState = new GameState();
         gameState.getCardPiles().set(0,pileOne);
         GameState clonedState = gameState.cloneGameState();
-        assertEquals(gameState.getCardPiles().get(0).get(0).getValue(), clonedState.getCardPiles().get(0).get(0).getValue());
+        assertEquals(gameState.getCardPiles().get(0).get(0).value(), clonedState.getCardPiles().get(0).get(0).value());
     }
 
     @Test

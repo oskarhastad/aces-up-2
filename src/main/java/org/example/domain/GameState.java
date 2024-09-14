@@ -21,7 +21,6 @@ public class GameState {
 		}
 
 	}
-
 	public GameState(List<LinkedList<Card>> cardPiles) {
 		this.cardPiles = cardPiles;
 
@@ -37,11 +36,9 @@ public class GameState {
 				.collect(Collectors.toList());
 	}
 
-
 	public int amountOfCards() {
 		return getCardPiles().stream().mapToInt(List::size).sum();
 	}
-
 
 	public GameState cloneGameState() {
 		List<LinkedList<Card>> copy = cardPiles.stream()
@@ -53,7 +50,7 @@ public class GameState {
 
 	private LinkedList<Card> clonePile(LinkedList<Card> pile) {
 		return pile.stream()
-				.map(card -> new Card(card.getValue(), card.getSuit()))
+				.map(card -> new Card(card.value(), card.suit()))
 				.collect(Collectors.toCollection(LinkedList::new));
 	}
 }
