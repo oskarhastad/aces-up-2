@@ -31,7 +31,6 @@ class CardMoveStrategyTest {
         return new GameState(piles);
     }
 
-    // Helper method to run the test assertions
     private void assertStrategyWorks(CardMoveStrategy strategy, GameState gameState, Deck deck) {
         boolean result = strategy.moveCard(gameState, deck);
         assertTrue(result);
@@ -49,7 +48,7 @@ class CardMoveStrategyTest {
     }
 
     @Test
-    void testSimpleMoveStrategy() {
+    void testBasicMoveStrategy() {
         GameState gameState = createTestGameState();
         BasicMoveStrategy strategy = new BasicMoveStrategy();
         Deck deck = new Deck();
