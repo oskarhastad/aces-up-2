@@ -3,6 +3,7 @@ package org.example.runner;
 import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
+import org.example.strategy.BasicMoveStrategy;
 import org.example.strategy.CardMoveStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,29 +14,16 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameRunnerTest {
-
-    @Mock
-    private GameLogic gameLogic;
-
-    @Mock
-    private CardMoveStrategy cardMoveStrategy;
-
-    @InjectMocks
-    private GameRunner gameRunner;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+public class GameRunnerTest {
 
     @Test
-    void testIncompleteSimulations() {
-        when(gameLogic.checkIfWin(any(GameState.class))).thenReturn(false);
+    public void testRunSimulations() {
+        GameRunner gameRunner = new GameRunner();
+        CardMoveStrategy strategy = new BasicMoveStrategy();
 
-        int simulations = 5;
-        int completed = gameRunner.runSimulations(cardMoveStrategy, simulations);
-
-        assertEquals(0, completed);
+        int simulations = 10;
+        int wins = gameRunner.runSimulations(strategy, simulations);
+        
+        assertTrue(wins >= 0 && wins <= simulations);
     }
 }

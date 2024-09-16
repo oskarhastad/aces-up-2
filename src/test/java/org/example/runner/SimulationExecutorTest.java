@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SimulationExecutorTest {
 
     @Test
-    void testSubmitTasks() throws Exception {
+    void testSubmitTasks() {
         SimulationExecutor executor = new SimulationExecutor();
         Callable<Boolean> task = () -> true;
         List<Future<Boolean>> results = executor.submitTasks(task, 10);

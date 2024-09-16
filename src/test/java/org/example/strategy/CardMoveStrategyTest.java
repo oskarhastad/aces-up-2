@@ -8,7 +8,6 @@ import org.example.domain.Suit;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,21 +41,21 @@ class CardMoveStrategyTest {
     private void assertStrategyWorks(CardMoveStrategy strategy, GameState gameState, Deck deck) {
         boolean result = strategy.moveCard(gameState, deck);
         assertTrue(result);
-        for (LinkedList<Card> pile : gameState.getCardPiles()) {
+        for (ArrayList<Card> pile : gameState.getCardPiles()) {
             assertEquals(1, pile.size());
         }
     }
 
     private GameState createTestGameState() {
-        List<LinkedList<Card>> piles = new ArrayList<>();
-        LinkedList<Card> pileOne = new LinkedList<>();
+        List<ArrayList<Card>> piles = new ArrayList<>();
+        ArrayList<Card> pileOne = new ArrayList<>();
         pileOne.add(new Card(14, Suit.SPADES));
-        LinkedList<Card> pileTwo = new LinkedList<>();
+        ArrayList<Card> pileTwo = new ArrayList<>();
         pileTwo.add(new Card(14, Suit.HEARTS));
-        LinkedList<Card> pileThree = new LinkedList<>();
+        ArrayList<Card> pileThree = new ArrayList<>();
         pileThree.add(new Card(14, Suit.CLUBS));
         pileThree.add(new Card(14, Suit.DIAMONDS));
-        LinkedList<Card> pileFour = new LinkedList<>();
+        ArrayList<Card> pileFour = new ArrayList<>();
         piles.add(pileOne);
         piles.add(pileTwo);
         piles.add(pileThree);

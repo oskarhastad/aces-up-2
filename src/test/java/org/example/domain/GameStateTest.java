@@ -1,37 +1,74 @@
 package org.example.domain;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class
-GameStateTest {
+public class GameStateTest {
 
     @Test
-    void testInitialState() {
+    public void testGameStateInitialization() {
         GameState gameState = new GameState();
-        assertEquals(4, gameState.getCardPiles().size());
+        List<ArrayList<Card>> piles = gameState.getCardPiles();
+
+        assertEquals(4, piles.size());
+        for (List<Card> pile : piles) {
+            assertTrue(pile.isEmpty());
+        }
     }
 
     @Test
-    void testCloneGameState() {
-        LinkedList<Card> pileOne = new LinkedList<>();
-        pileOne.add(new Card(3, Suit.SPADES));
+    public void testGetEmptyPiles() {
         GameState gameState = new GameState();
-        gameState.getCardPiles().set(0,pileOne);
-        GameState clonedState = gameState.copyGameState();
-        assertEquals(gameState.getCardPiles().get(0).get(0).value(), clonedState.getCardPiles().get(0).get(0).value());
+        List<ArrayList<Card>> emptyPiles = gameState.getEmptyPiles();
+        assertEquals(4, emptyPiles.size());
+
+        gameState.getCardPiles().get(0).add(new Card(10, Suit.HEARTS));
+
+        emptyPiles = gameState.getEmptyPiles();
+        assertEquals(3, emptyPiles.size());
     }
 
     @Test
-    void testCheckEmptyAndMovablePiles() {
-        LinkedList<Card> pileOne = new LinkedList<>();
-        pileOne.add(new Card(2, Suit.HEARTS));
-        pileOne.add(new Card(3, Suit.CLUBS));
+    public void testGetMovablePiles() {
         GameState gameState = new GameState();
-        gameState.getCardPiles().set(0,pileOne);
-        assertEquals(3, gameState.getEmptyPiles().size());
-        assertEquals(1, gameState.getMovablePiles().size());
+
+        gameState.getCardPiles().get(0).add(new Card(10, Suit.HEARTS));
+
+        gameState.getCardPiles().get(1).add(new Card(9, Suit.SPADES));
+        gameState.getCardPiles().get(1).add(new Card(8, Suit.DIAMONDS));
+
+        List<ArrayList<Card>> movablePiles = gameState.getMovablePiles();
+        assertEquals(1, movablePiles.size());
+        assertEquals(gameState.getCardPiles().get(1), movablePiles.get(0));
+    }
+
+    @Test
+    public void testCloneGameState() {
+        GameState originalState = new GameState();
+        originalState.getCardPiles().get(0).add(new Card(10, Suit.HEARTS));
+
+        GameState clonedState = originalState.copyGameState();
+
+        assertEquals(originalState.getCardPiles(), clonedState.getCardPiles());
+
+        clonedState.getCardPiles().get(0).add(new Card(9, Suit.SPADES));
+
+        assertNotEquals(originalState.getCardPiles().get(0).size(), clonedState.getCardPiles().get(0).size());
+    }
+
+    @Test
+    public void testGetTotalCardCount() {
+        GameState gameState = new GameState();
+
+        assertEquals(0, gameState.getCardCount());
+
+        gameState.getCardPiles().get(0).add(new Card(10, Suit.HEARTS));
+        gameState.getCardPiles().get(1).add(new Card(9, Suit.SPADES));
+        gameState.getCardPiles().get(1).add(new Card(8, Suit.DIAMONDS));
+
+        assertEquals(3, gameState.getCardCount());
     }
 }

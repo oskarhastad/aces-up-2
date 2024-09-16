@@ -4,13 +4,13 @@ import org.example.domain.Card;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameLogic {
 
     public void dealCards(GameState gameState, Deck deck) {
-        for (LinkedList<Card> pile : gameState.getCardPiles()) {
+        for (ArrayList<Card> pile : gameState.getCardPiles()) {
             if (!deck.getCards().isEmpty()) pile.add(deck.drawCard());
         }
     }
@@ -21,13 +21,13 @@ public class GameLogic {
 
         do {
             cardsRemovedThisIteration = false;
-            List<LinkedList<Card>> cardPiles = gameState.getCardPiles();
+            List<ArrayList<Card>> cardPiles = gameState.getCardPiles();
             int numberOfPiles = cardPiles.size();
 
             for (int i = 0; i < numberOfPiles; i++) {
                 for (int j = i + 1; j < numberOfPiles; j++) {
-                    LinkedList<Card> firstPile = cardPiles.get(i);
-                    LinkedList<Card> secondPile = cardPiles.get(j);
+                    ArrayList<Card> firstPile = cardPiles.get(i);
+                    ArrayList<Card> secondPile = cardPiles.get(j);
 
                     if (pilesAreNotEmpty(firstPile, secondPile) && removeLowerCardSameSuit(firstPile, secondPile)) {
                         cardsRemovedThisIteration = true;
@@ -40,20 +40,20 @@ public class GameLogic {
         return anyCardsRemoved;
     }
 
-    private boolean pilesAreNotEmpty(LinkedList<Card> firstPile, LinkedList<Card> secondPile) {
+    private boolean pilesAreNotEmpty(ArrayList<Card> firstPile, ArrayList<Card> secondPile) {
         return !firstPile.isEmpty() && !secondPile.isEmpty();
     }
 
-    private boolean removeLowerCardSameSuit(LinkedList<Card> firstPile, LinkedList<Card> secondPile) {
-        Card lastCardPileOne = firstPile.getLast();
-        Card lastCardPileTwo = secondPile.getLast();
+    private boolean removeLowerCardSameSuit(ArrayList<Card> firstPile, ArrayList<Card> secondPile) {
+        Card lastCardPileOne = firstPile.get(firstPile.size() - 1);
+        Card lastCardPileTwo = secondPile.get(secondPile.size() - 1);
 
         if (lastCardPileOne.suit() == lastCardPileTwo.suit()) {
             if (lastCardPileOne.value() > lastCardPileTwo.value()) {
-                secondPile.removeLast();
+                secondPile.remove(secondPile.size() - 1);
             }
             else {
-                firstPile.removeLast();
+                firstPile.remove(firstPile.size() - 1);
             }
             return true;
         }
@@ -62,7 +62,7 @@ public class GameLogic {
 
     public boolean checkIfWin(GameState gameState) {
         return gameState.getCardPiles().stream()
-                .allMatch(pile -> pile.size() == 1 && pile.getFirst().value() == 14);
+                .allMatch(pile -> pile.size() == 1 && pile.get(0).value() == 14);
     }
 }
 

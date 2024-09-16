@@ -1,27 +1,66 @@
 package org.example.domain;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class DeckTest {
+public class DeckTest {
 
     @Test
-    void testDeckSize() {
+    public void testDeckInitialization() {
         Deck deck = new Deck();
-        assertEquals(52, deck.getCards().size());
+        List<Card> cards = deck.getCards();
+        assertEquals(52, cards.size());
+
+        HashSet<Card> uniqueCards = new HashSet<>(cards);
+        assertEquals(52, uniqueCards.size());
     }
 
     @Test
-    void testDrawCardReducesDeckSize() {
-        Deck deck = new Deck();
-        deck.drawCard();
-        assertEquals(51, deck.getCards().size());
+    public void testShuffleDeck() {
+        Deck deck1 = new Deck();
+        Deck deck2 = new Deck();
+
+        deck1.shuffle();
+        deck2.shuffle();
+
+        assertNotEquals(deck1.getCards(), deck2.getCards());
     }
 
     @Test
-    void testShuffleDeck() {
+    public void testDrawCard() {
         Deck deck = new Deck();
-        Deck unshuffledDeck = new Deck();
         deck.shuffle();
-        assertNotEquals(deck.getCards(), unshuffledDeck.getCards());
+        int initialSize = deck.getCards().size();
+
+        Card drawnCard = deck.drawCard();
+        assertNotNull(drawnCard);
+        assertEquals(initialSize - 1, deck.getCards().size());
+    }
+
+    @Test
+    public void testDrawFromEmptyDeck() {
+        Deck deck = new Deck();
+
+        while (!deck.getCards().isEmpty()) {
+            deck.drawCard();
+        }
+
+        assertThrows(IllegalStateException.class, deck::drawCard);
+    }
+
+    @Test
+    public void testCloneDeck() {
+        Deck originalDeck = new Deck();
+        originalDeck.shuffle();
+        Deck clonedDeck = originalDeck.copyDeck();
+
+        assertEquals(originalDeck.getCards(), clonedDeck.getCards());
+
+        clonedDeck.drawCard();
+
+        assertNotEquals(originalDeck.getCards().size(), clonedDeck.getCards().size());
     }
 }

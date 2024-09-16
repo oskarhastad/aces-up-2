@@ -8,7 +8,7 @@ import org.example.strategy.RandomCardStrategy;
 @Slf4j
 public class Main {
 	public static void main(String[] args) {
-		int simulations = 1000;
+		int simulations = 10000;
 		CardMoveStrategy strategy = new BasicMoveStrategy();
 
 		GameRunner gameRunner = new GameRunner();

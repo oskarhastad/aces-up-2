@@ -5,6 +5,7 @@ import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,18 +19,18 @@ public class BasicMoveStrategy implements CardMoveStrategy{
 
     @Override
     public boolean moveCard(GameState gameState, Deck deck) {
-        List<LinkedList<Card>> emptyPiles = gameState.getEmptyPiles();
-        List<LinkedList<Card>> movablePiles = gameState.getMovablePiles();
+        List<ArrayList<Card>> emptyPiles = gameState.getEmptyPiles();
+        List<ArrayList<Card>> movablePiles = gameState.getMovablePiles();
 
         if (!emptyPiles.isEmpty() && !movablePiles.isEmpty()) {
             GameState candidate = gameState;
 
             for (int i = 0; i < movablePiles.size(); i++) {
                 GameState temp = gameState.copyGameState();
-                List<LinkedList<Card>> tempEmptyPiles = temp.getEmptyPiles();
-                List<LinkedList<Card>> tempMovablePiles = temp.getMovablePiles();
-                tempEmptyPiles.get(0).add(tempMovablePiles.get(i).getLast());
-                tempMovablePiles.get(i).removeLast();
+                List<ArrayList<Card>> tempEmptyPiles = temp.getEmptyPiles();
+                List<ArrayList<Card>> tempMovablePiles = temp.getMovablePiles();
+                tempEmptyPiles.get(0).add(tempMovablePiles.get(i).get(tempMovablePiles.get(i).size() - 1));
+                tempMovablePiles.get(i).remove(tempMovablePiles.get(i).size() - 1);
                 gameLogic.removeCards(temp);
 
                 if (temp.getCardCount() <= candidate.getCardCount()) {

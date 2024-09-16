@@ -4,59 +4,73 @@ import org.example.domain.Card;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 import org.example.domain.Suit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameLogicTest {
+public class GameLogicTest {
 
-    private final GameLogic gameLogic = new GameLogic();
+    private GameLogic gameLogic;
+    private GameState gameState;
+    private Deck deck;
+
+    @BeforeEach
+    public void setup() {
+        gameLogic = new GameLogic();
+        gameState = new GameState();
+        deck = new Deck();
+        deck.shuffle();
+    }
 
     @Test
-    void testDealCards() {
-        Deck deck = new Deck();
-        GameState gameState = new GameState();
+    public void testDealCards() {
         gameLogic.dealCards(gameState, deck);
-        for (LinkedList<Card> pile : gameState.getCardPiles()) {
-            assertFalse(pile.isEmpty());
+
+        for (List<Card> pile : gameState.getCardPiles()) {
+            assertEquals(1, pile.size());
         }
+
+        assertEquals(48, deck.getCards().size());
     }
 
     @Test
-    void testRemoveCards() {
-        List<LinkedList<Card>> piles = new ArrayList<>();
-        LinkedList<Card> pileOne = new LinkedList<>();
-        LinkedList<Card> pileTwo = new LinkedList<>();
-        pileOne.add(new Card(3, Suit.SPADES));
-        pileTwo.add(new Card(4, Suit.SPADES));
-        piles.add(pileOne);
-        piles.add(pileTwo);
-        GameState gameState = new GameState(piles);
-        boolean result = gameLogic.removeCards(gameState);
-        assertTrue(result);
-        assertEquals(0, gameState.getCardPiles().get(0).size());
+    public void testRemoveCardsWithSameSuit() {
+        gameState.getCardPiles().get(0).add(new Card(10, Suit.HEARTS));
+        gameState.getCardPiles().get(1).add(new Card(9, Suit.HEARTS));
+
+        boolean removed = gameLogic.removeCards(gameState);
+
+        assertTrue(removed);
+        assertEquals(1, gameState.getCardPiles().get(0).size());
+        assertEquals(0, gameState.getCardPiles().get(1).size());
     }
 
     @Test
-    void testCheckIfWin() {
-        List<LinkedList<Card>> piles = new ArrayList<>();
-        LinkedList<Card> pileOne = new LinkedList<>();
-        pileOne.add(new Card(14, Suit.SPADES));
-        LinkedList<Card> pileTwo = new LinkedList<>();
-        pileTwo.add(new Card(14, Suit.HEARTS));
-        LinkedList<Card> pileThree = new LinkedList<>();
-        pileThree.add(new Card(14, Suit.CLUBS));
-        LinkedList<Card> pileFour = new LinkedList<>();
-        pileFour.add(new Card(14, Suit.DIAMONDS));
-        piles.add(pileOne);
-        piles.add(pileTwo);
-        piles.add(pileThree);
-        piles.add(pileFour);
-        GameState gameState = new GameState(piles);
+    public void testRemoveCardsWithDifferentSuits() {
+        gameState.getCardPiles().get(0).add(new Card(10, Suit.HEARTS));
+        gameState.getCardPiles().get(1).add(new Card(9, Suit.SPADES));
+
+        boolean removed = gameLogic.removeCards(gameState);
+
+        assertFalse(removed);
+        assertEquals(1, gameState.getCardPiles().get(0).size());
+        assertEquals(1, gameState.getCardPiles().get(1).size());
+    }
+
+    @Test
+    public void testCheckIfWinTrue() {
+        for (List<Card> pile : gameState.getCardPiles()) {
+            pile.add(new Card(14, Suit.HEARTS));
+        }
+
         assertTrue(gameLogic.checkIfWin(gameState));
+    }
+
+    @Test
+    public void testCheckIfWinFalse() {
+        gameLogic.dealCards(gameState, deck);
+        assertFalse(gameLogic.checkIfWin(gameState));
     }
 }
