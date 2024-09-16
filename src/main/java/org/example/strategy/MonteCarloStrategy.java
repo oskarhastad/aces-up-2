@@ -73,12 +73,10 @@ public class MonteCarloStrategy implements CardMoveStrategy {
     }
 
     private void processRemovalsAndMoves(GameState gameState, Deck deck, CardMoveStrategy strategy) {
-        boolean changed = true;
-        while (changed) {
-            boolean changed1 = gameLogic.removeCards(gameState);
-            boolean changed2 = strategy.moveCard(gameState, deck);
-            changed = changed1 || changed2;
-        }
+        boolean changed;
+        do {
+            changed = gameLogic.removeCards(gameState) | strategy.moveCard(gameState, deck);
+        } while (changed);
     }
 
     @Override
