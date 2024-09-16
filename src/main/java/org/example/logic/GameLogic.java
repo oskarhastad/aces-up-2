@@ -5,6 +5,7 @@ import org.example.domain.Deck;
 import org.example.domain.GameState;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class GameLogic {
 
@@ -16,23 +17,31 @@ public class GameLogic {
 
     public boolean removeCards(GameState gameState) {
         boolean anyCardsRemoved = false;
-        boolean cardsRemovedThisIteration = true;
+        boolean cardsRemovedThisIteration;
 
-        while (cardsRemovedThisIteration) {
+        do {
             cardsRemovedThisIteration = false;
+            List<LinkedList<Card>> cardPiles = gameState.getCardPiles();
+            int numberOfPiles = cardPiles.size();
 
-            for (int i = 0; i < gameState.getCardPiles().size(); i++) {
-                for (int j = i + 1; j < gameState.getCardPiles().size(); j++) {
-                    if (!gameState.getCardPiles().get(i).isEmpty() && !gameState.getCardPiles().get(j).isEmpty()) {
-                        if (removeLowerCardSameSuit(gameState.getCardPiles().get(i), gameState.getCardPiles().get(j))) {
-                            cardsRemovedThisIteration = true;
-                            anyCardsRemoved = true;
-                        }
+            for (int i = 0; i < numberOfPiles; i++) {
+                for (int j = i + 1; j < numberOfPiles; j++) {
+                    LinkedList<Card> firstPile = cardPiles.get(i);
+                    LinkedList<Card> secondPile = cardPiles.get(j);
+
+                    if (pilesAreNotEmpty(firstPile, secondPile) && removeLowerCardSameSuit(firstPile, secondPile)) {
+                        cardsRemovedThisIteration = true;
+                        anyCardsRemoved = true;
                     }
                 }
             }
-        }
+        } while (cardsRemovedThisIteration);
+
         return anyCardsRemoved;
+    }
+
+    private boolean pilesAreNotEmpty(LinkedList<Card> firstPile, LinkedList<Card> secondPile) {
+        return !firstPile.isEmpty() && !secondPile.isEmpty();
     }
 
     private boolean removeLowerCardSameSuit(LinkedList<Card> firstPile, LinkedList<Card> secondPile) {

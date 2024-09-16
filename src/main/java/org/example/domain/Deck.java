@@ -5,8 +5,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
-
 
 @Getter
 public class Deck {
@@ -32,7 +32,7 @@ public class Deck {
 	}
 
 	public void shuffle() {
-		Collections.shuffle(cards);
+		Collections.shuffle(cards, ThreadLocalRandom.current());
 	}
 
 	public Card drawCard() {

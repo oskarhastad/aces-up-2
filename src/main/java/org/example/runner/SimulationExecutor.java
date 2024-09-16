@@ -25,7 +25,7 @@ public class SimulationExecutor {
     }
 
     public int collectResults(List<Future<Boolean>> results) {
-        int completed = 0;
+        int wins = 0;
         int totalSimulations = results.size();
 
         try {
@@ -33,10 +33,10 @@ public class SimulationExecutor {
                 Future<Boolean> future = results.get(i);
                 try {
                     if (future.get()) {
-                        completed++;
-                        double completedPercent = (double) completed / (i + 1) * 100;
-                        log.info("Completed {} out of {} simulations. Won {} out of {}, thus a completion rate of {}%",
-                                (i + 1), totalSimulations, completed, (i + 1), String.format("%.2f", completedPercent));
+                        wins++;
+                        double winRate = (double) wins / (i + 1) * 100;
+                        log.info("Completed {} out of {} simulations. Won: {}. Win rate: {}%",
+                                (i + 1), totalSimulations, wins, String.format("%.2f", winRate));
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -48,8 +48,7 @@ public class SimulationExecutor {
         } finally {
             shutdownExecutor();
         }
-
-        return completed;
+        return wins;
     }
 
     public void shutdownExecutor() {

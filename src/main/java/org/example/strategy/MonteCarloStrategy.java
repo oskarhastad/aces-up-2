@@ -8,28 +8,27 @@ import org.example.domain.GameState;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SimulationStrategy implements CardMoveStrategy {
+public class MonteCarloStrategy implements CardMoveStrategy {
 
     private final GameLogic gameLogic;
+    private final int simulationsPerDecision;
 
-    public SimulationStrategy() {
+    public MonteCarloStrategy(int simulationsPerDecision) {
+        this.simulationsPerDecision = simulationsPerDecision;
         this.gameLogic = new GameLogic();
     }
 
     @Override
     public boolean moveCard(GameState gameState, Deck deck) {
-        boolean changed = false;
         List<LinkedList<Card>> emptyPiles = gameState.getEmptyPiles();
         List<LinkedList<Card>> movablePiles = gameState.getMovablePiles();
-        int simulationsPerDecision = 500;
 
         if (!emptyPiles.isEmpty() && !movablePiles.isEmpty()) {
-            changed = true;
-            GameState candidate =  gameState;
-            int success = 0;
+            GameState candidate = null;
+            int bestSuccessCount = 0;
 
             for (int i = 0; i < movablePiles.size(); i++) {
-                GameState temp =  gameState.cloneGameState();
+                GameState temp =  gameState.copyGameState();
                 List<LinkedList<Card>> tempEmptyPiles = temp.getEmptyPiles();
                 List<LinkedList<Card>> tempMovablePiles = temp.getMovablePiles();
                 tempEmptyPiles.get(0).add(tempMovablePiles.get(i).getLast());
@@ -40,21 +39,22 @@ public class SimulationStrategy implements CardMoveStrategy {
                     successTemp = simulateFinish(temp, deck, simulationsPerDecision);
                 }
 
-                if (successTemp >= success) {
+                if (successTemp >= bestSuccessCount) {
                     candidate = temp;
-                    success = successTemp;
+                    bestSuccessCount = successTemp;
                 }
             }
             gameState.setCardPiles(candidate.getCardPiles());
+            return true;
         }
-        return changed;
+        return false;
     }
 
     int simulateFinish(GameState gameState, Deck deck, int simulations) {
         int success = 0;
 
         for (int i = 0; i < simulations; i++) {
-            GameState temp = gameState.cloneGameState();
+            GameState temp = gameState.copyGameState();
             Deck tempDeck = deck.copyDeck();
             tempDeck.shuffle();
             CardMoveStrategy strategy = new BasicMoveStrategy();

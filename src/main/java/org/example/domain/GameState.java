@@ -18,28 +18,37 @@ public class GameState {
 			cardPiles.add(new LinkedList<>());
 		}
 	}
+
 	public GameState(List<LinkedList<Card>> cardPiles) {
 		this.cardPiles = cardPiles;
+
+	}
+
+	public void addCardToPile(Card card, int pile) {
+
+	}
+
+	public void removeLastCardInPile(int pile) {
 
 	}
 
 	public List<LinkedList<Card>> getEmptyPiles() {
 		return cardPiles.stream()
 				.filter(List::isEmpty)
-				.toList();
+				.collect(Collectors.toList());
 	}
 
 	public List<LinkedList<Card>> getMovablePiles() {
 		return cardPiles.stream()
 				.filter(pile -> pile.size() >= 2)
-				.toList();
+				.collect(Collectors.toList());
 	}
 
 	public int getCardCount() {
 		return getCardPiles().stream().mapToInt(List::size).sum();
 	}
 
-	public GameState cloneGameState() {
+	public GameState copyGameState() {
 		List<LinkedList<Card>> copy = cardPiles.stream()
 				.map(LinkedList::new)
 				.toList();

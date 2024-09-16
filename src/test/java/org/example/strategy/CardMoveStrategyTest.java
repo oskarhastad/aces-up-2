@@ -32,9 +32,9 @@ class CardMoveStrategyTest {
     }
 
     @Test
-    void testSimulationStrategy() {
+    void testMonteCarloStrategy() {
         GameState gameState = createTestGameState();
-        SimulationStrategy strategy = new SimulationStrategy();
+        MonteCarloStrategy strategy = new MonteCarloStrategy(1);
         Deck deck = new Deck();
         assertStrategyWorks(strategy, gameState, deck);
     }

@@ -20,7 +20,7 @@ GameStateTest {
         pileOne.add(new Card(3, Suit.SPADES));
         GameState gameState = new GameState();
         gameState.getCardPiles().set(0,pileOne);
-        GameState clonedState = gameState.cloneGameState();
+        GameState clonedState = gameState.copyGameState();
         assertEquals(gameState.getCardPiles().get(0).get(0).value(), clonedState.getCardPiles().get(0).get(0).value());
     }
 
