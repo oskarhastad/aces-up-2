@@ -24,14 +24,6 @@ public class GameState {
 
 	}
 
-	public void addCardToPile(Card card, int pile) {
-
-	}
-
-	public void removeLastCardInPile(int pile) {
-
-	}
-
 	public List<LinkedList<Card>> getEmptyPiles() {
 		return cardPiles.stream()
 				.filter(List::isEmpty)

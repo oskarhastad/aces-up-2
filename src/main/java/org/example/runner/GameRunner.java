@@ -18,22 +18,17 @@ public class GameRunner {
     }
 
     public int runSimulations(CardMoveStrategy cardMoveStrategy, int simulations) {
-        Callable<Boolean> task = createSimulationTask(cardMoveStrategy);
+        Callable<Boolean> task = () -> simulateSingleGame(cardMoveStrategy);
         List<Future<Boolean>> results = simulationExecutor.submitTasks(task, simulations);
 
         return simulationExecutor.collectResults(results);
     }
 
-    private Callable<Boolean> createSimulationTask(CardMoveStrategy cardMoveStrategy) {
-        return () -> {
-            Deck deck = new Deck();
-            deck.shuffle();
-            GameState gameState = new GameState();
-            return simulateSingleGame(cardMoveStrategy, gameState, deck);
-        };
-    }
+    private boolean simulateSingleGame(CardMoveStrategy cardMoveStrategy) {
+        Deck deck = new Deck();
+        deck.shuffle();
+        GameState gameState = new GameState();
 
-    private boolean simulateSingleGame(CardMoveStrategy cardMoveStrategy, GameState gameState, Deck deck) {
         while (!deck.getCards().isEmpty()) {
             gameLogic.dealCards(gameState, deck);
             boolean changed;
