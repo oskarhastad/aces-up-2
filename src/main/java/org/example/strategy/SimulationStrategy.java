@@ -1,8 +1,12 @@
 package org.example.strategy;
 
+import org.example.domain.Card;
 import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class SimulationStrategy implements CardMoveStrategy {
 
@@ -13,44 +17,46 @@ public class SimulationStrategy implements CardMoveStrategy {
     }
 
     @Override
-    public boolean moveCard(GameState gamestate, Deck deck) {
+    public boolean moveCard(GameState gameState, Deck deck) {
         boolean changed = false;
-        gamestate.checkEmptyAndMovable();
+        List<LinkedList<Card>> emptyPiles = gameState.getEmptyPiles();
+        List<LinkedList<Card>> movablePiles = gameState.getMovablePiles();
         int simulationsPerDecision = 500;
 
-        if (!gamestate.getEmptyPiles().isEmpty() && ! gamestate.getMovablePiles().isEmpty()) {
+        if (!emptyPiles.isEmpty() && !movablePiles.isEmpty()) {
             changed = true;
-            GameState candidate =  gamestate;
+            GameState candidate =  gameState;
             int success = 0;
 
-            for (int i = 0; i <  gamestate.getMovablePiles().size(); i++) {
-                GameState temporary =  gamestate.cloneGameState();
-                temporary.checkEmptyAndMovable();
-                temporary.getEmptyPiles().get(0).add(temporary.getMovablePiles().get(i).getLast());
-                temporary.getMovablePiles().get(i).removeLast();
+            for (int i = 0; i < movablePiles.size(); i++) {
+                GameState temp =  gameState.cloneGameState();
+                List<LinkedList<Card>> tempEmptyPiles = temp.getEmptyPiles();
+                List<LinkedList<Card>> tempMovablePiles = temp.getMovablePiles();
+                tempEmptyPiles.get(0).add(tempMovablePiles.get(i).getLast());
+                tempMovablePiles.get(i).removeLast();
 
                 int successTemp = 0;
-                if (gamestate.getMovablePiles().size() > 1) {
-                    successTemp = simulateFinish(temporary, deck, simulationsPerDecision);
+                if (movablePiles.size() > 1) {
+                    successTemp = simulateFinish(temp, deck, simulationsPerDecision);
                 }
 
                 if (successTemp >= success) {
-                    candidate = temporary;
+                    candidate = temp;
                     success = successTemp;
                 }
             }
-            gamestate.setCardPiles(candidate.getCardPiles());
+            gameState.setCardPiles(candidate.getCardPiles());
         }
         return changed;
     }
 
-    int simulateFinish(GameState gamestate, Deck deck, int simulations) {
+    int simulateFinish(GameState gameState, Deck deck, int simulations) {
         int success = 0;
 
         for (int i = 0; i < simulations; i++) {
-            GameState temp = gamestate.cloneGameState();
-            Deck tempDeck = deck.cloneDeck();
-            tempDeck.shuffleDeck();
+            GameState temp = gameState.cloneGameState();
+            Deck tempDeck = deck.copyDeck();
+            tempDeck.shuffle();
             CardMoveStrategy strategy = new BasicMoveStrategy();
 
             while (!tempDeck.getCards().isEmpty()) {
@@ -65,11 +71,11 @@ public class SimulationStrategy implements CardMoveStrategy {
         return success;
     }
 
-    private void processRemovalsAndMoves(GameState gamestate, Deck deck, CardMoveStrategy strategy) {
+    private void processRemovalsAndMoves(GameState gameState, Deck deck, CardMoveStrategy strategy) {
         boolean changed = true;
         while (changed) {
-            boolean changed1 = gameLogic.removeCards(gamestate);
-            boolean changed2 = strategy.moveCard(gamestate, deck);
+            boolean changed1 = gameLogic.removeCards(gameState);
+            boolean changed2 = strategy.moveCard(gameState, deck);
             changed = changed1 || changed2;
         }
     }

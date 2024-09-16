@@ -1,8 +1,12 @@
 package org.example.strategy;
 
+import org.example.domain.Card;
 import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class BasicMoveStrategy implements CardMoveStrategy{
 
@@ -13,26 +17,29 @@ public class BasicMoveStrategy implements CardMoveStrategy{
     }
 
     @Override
-    public boolean moveCard(GameState gamestate, Deck deck) {
-        gamestate.checkEmptyAndMovable();
+    public boolean moveCard(GameState gameState, Deck deck) {
+        List<LinkedList<Card>> emptyPiles = gameState.getEmptyPiles();
+        List<LinkedList<Card>> movablePiles = gameState.getMovablePiles();
+
         boolean movedCard = false;
 
-        if (!gamestate.getEmptyPiles().isEmpty() && !gamestate.getMovablePiles().isEmpty()) {
+        if (!emptyPiles.isEmpty() && !movablePiles.isEmpty()) {
             movedCard = true;
-            GameState candidate = gamestate;
+            GameState candidate = gameState;
 
-            for (int i = 0; i < gamestate.getMovablePiles().size(); i++) {
-                GameState temporary = gamestate.cloneGameState();
-                temporary.checkEmptyAndMovable();
-                temporary.getEmptyPiles().get(0).add(temporary.getMovablePiles().get(i).getLast());
-                temporary.getMovablePiles().get(i).removeLast();
-                gameLogic.removeCards(temporary);
+            for (int i = 0; i < movablePiles.size(); i++) {
+                GameState temp = gameState.cloneGameState();
+                List<LinkedList<Card>> tempEmptyPiles = temp.getEmptyPiles();
+                List<LinkedList<Card>> tempMovablePiles = temp.getMovablePiles();
+                tempEmptyPiles.get(0).add(tempMovablePiles.get(i).getLast());
+                tempMovablePiles.get(i).removeLast();
+                gameLogic.removeCards(temp);
 
-                if (temporary.amountOfCards() <= candidate.amountOfCards()) {
-                    candidate = temporary;
+                if (temp.getCardCount() <= candidate.getCardCount()) {
+                    candidate = temp;
                 }
             }
-            gamestate.setCardPiles(candidate.getCardPiles());
+            gameState.setCardPiles(candidate.getCardPiles());
         }
         return movedCard;
     }

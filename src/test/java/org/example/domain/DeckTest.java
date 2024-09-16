@@ -21,7 +21,7 @@ class DeckTest {
     void testShuffleDeck() {
         Deck deck = new Deck();
         Deck unshuffledDeck = new Deck();
-        deck.shuffleDeck();
+        deck.shuffle();
         assertNotEquals(deck.getCards(), unshuffledDeck.getCards());
     }
 }

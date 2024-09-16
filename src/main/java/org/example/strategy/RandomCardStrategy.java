@@ -1,34 +1,31 @@
 package org.example.strategy;
 
+import org.example.domain.Card;
 import org.example.logic.GameLogic;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomCardStrategy implements CardMoveStrategy{
 
-    private final GameLogic gameLogic;
-
-    public RandomCardStrategy() {
-        this.gameLogic = new GameLogic();
-    }
-
     @Override
-    public boolean moveCard(GameState gamestate, Deck deck) {
-        gamestate.checkEmptyAndMovable();
+    public boolean moveCard(GameState gameState, Deck deck) {
+        List<LinkedList<Card>> emptyPiles = gameState.getEmptyPiles();
+        List<LinkedList<Card>> movablePiles = gameState.getMovablePiles();
 
-        if (gamestate.getEmptyPiles().isEmpty() || gamestate.getMovablePiles().isEmpty()) {
+        if (emptyPiles.isEmpty() || movablePiles.isEmpty()) {
             return false;
         }
 
-        int randomNum = ThreadLocalRandom.current().nextInt(0, gamestate.getMovablePiles().size());
-        gamestate.getEmptyPiles().get(0).add(gamestate.getMovablePiles().get(randomNum).getLast());
-        gamestate.getMovablePiles().get(randomNum).removeLast();
+        int randomIndex = ThreadLocalRandom.current().nextInt(0, movablePiles.size());
+        emptyPiles.get(0).add(movablePiles.get(randomIndex).getLast());
+        movablePiles.get(randomIndex).removeLast();
 
         return true;
     }
-
     @Override
     public String toString() {
         return "Random Card Strategy";

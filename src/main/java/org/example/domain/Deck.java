@@ -5,8 +5,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 
 @Getter
 public class Deck {
@@ -17,13 +17,21 @@ public class Deck {
 		addAllCards();
 	}
 
+	private Deck(List<Card> cards) {
+		this.cards = cards;
+	}
+
+	public Deck copyDeck() {
+		return new Deck(new ArrayList<>(this.cards));
+	}
+
 	private void addAllCards() {
-		for(Card.Suit suit: Card.Suit.values()) {
+		for(Suit suit: Suit.values()) {
 			IntStream.rangeClosed(2,14).forEach(value -> cards.add(new Card(value, suit)));
 		}
 	}
 
-	public void shuffleDeck() {
+	public void shuffle() {
 		Collections.shuffle(cards);
 	}
 
@@ -32,13 +40,5 @@ public class Deck {
 			throw new IllegalStateException("Cannot draw from an empty deck");
 		}
 		return cards.remove(cards.size() - 1);
-	}
-
-	public Deck cloneDeck() {
-		Deck copy = new Deck();
-		copy.cards = cards.stream()
-				.map(card -> new Card(card.value(), card.suit()))
-				.collect(Collectors.toList());
-		return copy;
 	}
 }

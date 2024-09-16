@@ -1,5 +1,4 @@
 package org.example.runner;
-import lombok.extern.slf4j.Slf4j;
 import org.example.domain.Deck;
 import org.example.domain.GameState;
 import org.example.logic.GameLogic;
@@ -28,7 +27,7 @@ public class GameRunner {
     private Callable<Boolean> createSimulationTask(CardMoveStrategy cardMoveStrategy) {
         return () -> {
             Deck deck = new Deck();
-            deck.shuffleDeck();
+            deck.shuffle();
             GameState gameState = new GameState();
             return simulateSingleGame(cardMoveStrategy, gameState, deck);
         };
@@ -37,12 +36,11 @@ public class GameRunner {
     private boolean simulateSingleGame(CardMoveStrategy cardMoveStrategy, GameState gameState, Deck deck) {
         while (!deck.getCards().isEmpty()) {
             gameLogic.dealCards(gameState, deck);
-            boolean changed = true;
+            boolean changed;
 
-            while (changed) {
-                changed = gameLogic.removeCards(gameState);
-                if (cardMoveStrategy.moveCard(gameState, deck)) changed = true;
-            }
+            do {
+                changed = gameLogic.removeCards(gameState) | cardMoveStrategy.moveCard(gameState, deck);
+            } while (changed);
         }
         return gameLogic.checkIfWin(gameState);
     }

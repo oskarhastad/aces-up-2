@@ -17,7 +17,7 @@ GameStateTest {
     @Test
     void testCloneGameState() {
         LinkedList<Card> pileOne = new LinkedList<>();
-        pileOne.add(new Card(3, Card.Suit.SPADES));
+        pileOne.add(new Card(3, Suit.SPADES));
         GameState gameState = new GameState();
         gameState.getCardPiles().set(0,pileOne);
         GameState clonedState = gameState.cloneGameState();
@@ -27,11 +27,10 @@ GameStateTest {
     @Test
     void testCheckEmptyAndMovablePiles() {
         LinkedList<Card> pileOne = new LinkedList<>();
-        pileOne.add(new Card(2, Card.Suit.HEARTS));
-        pileOne.add(new Card(3, Card.Suit.CLUBS));
+        pileOne.add(new Card(2, Suit.HEARTS));
+        pileOne.add(new Card(3, Suit.CLUBS));
         GameState gameState = new GameState();
         gameState.getCardPiles().set(0,pileOne);
-        gameState.checkEmptyAndMovable();
         assertEquals(3, gameState.getEmptyPiles().size());
         assertEquals(1, gameState.getMovablePiles().size());
     }
